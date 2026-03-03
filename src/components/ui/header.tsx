@@ -1,0 +1,43 @@
+﻿import * as React from "react";
+import { cn } from "@/lib/utils";
+import { Logo } from "./logo";
+import { Separator } from "./separator";
+
+type HeaderProps = React.ComponentProps<"header"> & {
+  children?: React.ReactNode;
+};
+
+function Header({ children, className, ...props }: HeaderProps) {
+  return (
+    <header
+      data-slot="header"
+      className={cn(
+        "sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80",
+        className,
+      )}
+      {...props}
+    >
+      <div className="mx-auto flex min-h-18 w-full max-w-[1440px] items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
+        <Logo />
+
+        <div className="ml-auto flex items-center gap-3">
+          {children ?? (
+            <nav
+              aria-label="Основная навигация"
+              className="hidden items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground md:flex"
+            >
+              <span>Каталог</span>
+              <Separator orientation="vertical" className="h-4" />
+              <span>Подборки</span>
+              <Separator orientation="vertical" className="h-4" />
+              <span>Корзина</span>
+            </nav>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+}
+
+export { Header };
+export type { HeaderProps };
