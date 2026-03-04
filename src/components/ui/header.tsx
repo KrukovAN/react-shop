@@ -19,9 +19,10 @@ function Header({ children, className, ...props }: HeaderProps) {
       {...props}
     >
       <div className="mx-auto flex min-h-18 w-full max-w-[1440px] items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
-        <Logo />
+        <Logo compact className="sm:hidden" />
+        <Logo className="hidden sm:inline-flex" />
 
-        <div className="ml-auto flex items-center gap-3">
+        <div className="flex flex-1 justify-center px-2">
           {children ?? (
             <nav
               aria-label="Основная навигация"
@@ -34,6 +35,9 @@ function Header({ children, className, ...props }: HeaderProps) {
               <span>Корзина</span>
             </nav>
           )}
+        </div>
+
+        <div className="flex items-center">
           <ThemeToggle />
         </div>
       </div>

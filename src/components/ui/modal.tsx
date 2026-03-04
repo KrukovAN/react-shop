@@ -11,10 +11,12 @@ import { Separator } from "./separator";
 
 type ModalProps = {
   visible: boolean;
-  title: React.ReactNode;
+  title?: React.ReactNode;
   description?: React.ReactNode;
   onClose?: () => void;
   className?: string;
+  children?: React.ReactNode;
+  hideHeader?: boolean;
 };
 
 function Modal({
@@ -23,7 +25,35 @@ function Modal({
   description,
   onClose,
   className,
+  children,
+  hideHeader = false,
 }: ModalProps) {
+  const [portalContainer, setPortalContainer] = React.useState<HTMLElement | null>(
+    null,
+  );
+
+  React.useEffect(() => {
+    if (!visible || typeof document === "undefined") {
+      setPortalContainer(null);
+      return undefined;
+    }
+
+    const element = document.createElement("div");
+    element.dataset.slot = "modal-container";
+    document.body.appendChild(element);
+    setPortalContainer(element);
+
+    return () => {
+      element.remove();
+    };
+  }, [visible]);
+
+  if (!visible || !portalContainer) {
+    return null;
+  }
+
+  const showHeader = !hideHeader && (title || description);
+
   return (
     <Dialog
       open={visible}
@@ -33,16 +63,22 @@ function Modal({
         }
       }}
     >
-      <DialogContent className={cn(className)}>
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          {description ? (
-            <>
-              <Separator className="my-2" />
-              <DialogDescription>{description}</DialogDescription>
-            </>
-          ) : null}
-        </DialogHeader>
+      <DialogContent
+        className={cn(className)}
+        portalContainer={portalContainer}
+      >
+        {showHeader ? (
+          <DialogHeader>
+            {title ? <DialogTitle>{title}</DialogTitle> : null}
+            {description ? (
+              <>
+                <Separator className="my-2" />
+                <DialogDescription>{description}</DialogDescription>
+              </>
+            ) : null}
+          </DialogHeader>
+        ) : null}
+        {children}
       </DialogContent>
     </Dialog>
   );

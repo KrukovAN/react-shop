@@ -48,12 +48,17 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  portalContainer,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean;
+  portalContainer?: HTMLElement | null;
 }) {
   return (
-    <DialogPortal data-slot="dialog-portal">
+    <DialogPortal
+      data-slot="dialog-portal"
+      container={portalContainer ?? undefined}
+    >
       <DialogOverlay />
       <DialogPrimitive.Content
         data-slot="dialog-content"
@@ -67,10 +72,10 @@ function DialogContent({
         {showCloseButton && (
           <DialogPrimitive.Close
             data-slot="dialog-close"
-            className="data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-2 right-2 inline-flex size-8 cursor-pointer items-center justify-center rounded-full opacity-70 transition-colors transition-opacity hover:bg-accent hover:text-muted-foreground hover:opacity-100 focus-visible:bg-accent focus-visible:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+            className="absolute top-2 right-2 inline-flex size-9 cursor-pointer items-center justify-center rounded-full border border-border/70 bg-background/85 text-foreground shadow-sm backdrop-blur-md transition-colors hover:bg-background focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none disabled:pointer-events-none supports-[backdrop-filter]:bg-background/70 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
           >
             <XIcon />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">Закрыть</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Content>
@@ -108,7 +113,7 @@ function DialogFooter({
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close asChild>
-          <Button variant="outline">Close</Button>
+          <Button variant="outline">Закрыть</Button>
         </DialogPrimitive.Close>
       )}
     </div>
