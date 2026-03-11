@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { Header } from "@/components/ui/header";
+import { Header } from "@/layuots/header";
 
 const meta: Meta<typeof Header> = {
   title: "Навигация/Header",
@@ -47,3 +47,7 @@ export const Default: Story = {
     </ThemeProvider>
   ),
 };
+
+
+
+

@@ -1,4 +1,4 @@
-import * as React from "react";
+﻿import * as React from "react";
 import { cn } from "@/lib/utils";
 import {
   Dialog,
@@ -6,8 +6,8 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "./dialog";
-import { Separator } from "./separator";
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 
 type ModalProps = {
   visible: boolean;
@@ -53,6 +53,10 @@ function Modal({
   }
 
   const showHeader = !hideHeader && (title || description);
+  const accessibleTitle =
+    typeof title === "string" || typeof title === "number"
+      ? String(title).trim() || "Диалоговое окно"
+      : "Диалоговое окно";
 
   return (
     <Dialog
@@ -67,6 +71,9 @@ function Modal({
         className={cn(className)}
         portalContainer={portalContainer}
       >
+        {hideHeader || !title ? (
+          <DialogTitle className="sr-only">{accessibleTitle}</DialogTitle>
+        ) : null}
         {showHeader ? (
           <DialogHeader>
             {title ? <DialogTitle>{title}</DialogTitle> : null}
@@ -86,3 +93,7 @@ function Modal({
 
 export { Modal };
 export type { ModalProps };
+
+
+
+

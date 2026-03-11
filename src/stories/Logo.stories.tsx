@@ -1,6 +1,6 @@
 ﻿import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Logo } from "@/components/ui/logo";
+import { Logo } from "@/layuots/logo";
 
 const meta: Meta<typeof Logo> = {
   title: "Навигация/Logo",
@@ -24,3 +24,7 @@ export const Compact: Story = {
 export const Default: Story = {
   name: "Полный",
 };
+
+
+
+

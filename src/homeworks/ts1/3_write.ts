@@ -1,4 +1,4 @@
-export type Category = {
+﻿export type Category = {
   id: string;
   name: string;
   photo?: string;
@@ -65,27 +65,27 @@ const photoUrl = (seed: string, _w = 640, _h = 480): string => {
 const maybeDesc = (): string | undefined => {
   if (!chance(0.5)) return undefined;
   return pick([
-    "Без лишних деталей.",
-    "Срочно/по пути домой.",
-    "Акция/скидка применена.",
-    "Плановая покупка.",
-    "Рекомендовано друзьями.",
+    "Р‘РµР· Р»РёС€РЅРёС… РґРµС‚Р°Р»РµР№.",
+    "РЎСЂРѕС‡РЅРѕ/РїРѕ РїСѓС‚Рё РґРѕРјРѕР№.",
+    "РђРєС†РёСЏ/СЃРєРёРґРєР° РїСЂРёРјРµРЅРµРЅР°.",
+    "РџР»Р°РЅРѕРІР°СЏ РїРѕРєСѓРїРєР°.",
+    "Р РµРєРѕРјРµРЅРґРѕРІР°РЅРѕ РґСЂСѓР·СЊСЏРјРё.",
   ] as const);
 };
 
 /* ---------------- categories ---------------- */
 
 export const CATEGORIES = [
-  { id: "cat_food", name: "Еда", photo: photoUrl("cat_food", 200, 200) },
-  { id: "cat_tech", name: "Техника", photo: photoUrl("cat_tech", 200, 200) },
-  { id: "cat_clothes", name: "Одежда" },
-  { id: "cat_home", name: "Дом", photo: photoUrl("cat_home", 200, 200) },
-  { id: "cat_transport", name: "Транспорт" },
-  { id: "cat_fun", name: "Развлечения" },
-  { id: "cat_health", name: "Здоровье" },
-  { id: "cat_gifts", name: "Подарки" },
-  { id: "cat_edu", name: "Образование" },
-  { id: "cat_subs", name: "Подписки" },
+  { id: "cat_food", name: "Р•РґР°", photo: photoUrl("cat_food", 200, 200) },
+  { id: "cat_tech", name: "РўРµС…РЅРёРєР°", photo: photoUrl("cat_tech", 200, 200) },
+  { id: "cat_clothes", name: "РћРґРµР¶РґР°" },
+  { id: "cat_home", name: "Р”РѕРј", photo: photoUrl("cat_home", 200, 200) },
+  { id: "cat_transport", name: "РўСЂР°РЅСЃРїРѕСЂС‚" },
+  { id: "cat_fun", name: "Р Р°Р·РІР»РµС‡РµРЅРёСЏ" },
+  { id: "cat_health", name: "Р—РґРѕСЂРѕРІСЊРµ" },
+  { id: "cat_gifts", name: "РџРѕРґР°СЂРєРё" },
+  { id: "cat_edu", name: "РћР±СЂР°Р·РѕРІР°РЅРёРµ" },
+  { id: "cat_subs", name: "РџРѕРґРїРёСЃРєРё" },
 ] as const satisfies readonly Category[];
 
 const createRandomCategory = (): Category => {
@@ -96,36 +96,36 @@ const createRandomCategory = (): Category => {
 /* ---------------- data generators ---------------- */
 
 const PRODUCT_NAMES = [
-  "Кофе",
-  "Наушники",
-  "Футболка",
-  "Лампа",
-  "Такси",
-  "Книга",
-  "Пылесос",
-  "Мышь",
-  "Шампунь",
-  "Рюкзак",
+  "РљРѕС„Рµ",
+  "РќР°СѓС€РЅРёРєРё",
+  "Р¤СѓС‚Р±РѕР»РєР°",
+  "Р›Р°РјРїР°",
+  "РўР°РєСЃРё",
+  "РљРЅРёРіР°",
+  "РџС‹Р»РµСЃРѕСЃ",
+  "РњС‹С€СЊ",
+  "РЁР°РјРїСѓРЅСЊ",
+  "Р СЋРєР·Р°Рє",
 ] as const;
 
 const OP_COST_NAMES = [
-  "Покупка продуктов",
-  "Проезд",
-  "Подписка",
-  "Кафе",
-  "Аптека",
-  "Одежда",
-  "Домашние товары",
-  "Подарок",
+  "РџРѕРєСѓРїРєР° РїСЂРѕРґСѓРєС‚РѕРІ",
+  "РџСЂРѕРµР·Рґ",
+  "РџРѕРґРїРёСЃРєР°",
+  "РљР°С„Рµ",
+  "РђРїС‚РµРєР°",
+  "РћРґРµР¶РґР°",
+  "Р”РѕРјР°С€РЅРёРµ С‚РѕРІР°СЂС‹",
+  "РџРѕРґР°СЂРѕРє",
 ] as const;
 
 const OP_PROFIT_NAMES = [
-  "Зарплата",
-  "Возврат",
-  "Фриланс",
-  "Кэшбек",
-  "Продажа вещи",
-  "Подарили деньги",
+  "Р—Р°СЂРїР»Р°С‚Р°",
+  "Р’РѕР·РІСЂР°С‚",
+  "Р¤СЂРёР»Р°РЅСЃ",
+  "РљСЌС€Р±РµРє",
+  "РџСЂРѕРґР°Р¶Р° РІРµС‰Рё",
+  "РџРѕРґР°СЂРёР»Рё РґРµРЅСЊРіРё",
 ] as const;
 
 export const createRandomProduct = (createdAt: string): Product => {
@@ -176,3 +176,7 @@ export const createRandomOperation = (createdAt: string): Operation => {
         type: "Cost",
       };
 };
+
+
+
+

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+﻿import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ const variants = [
 ] as const;
 
 const meta: Meta<typeof Button> = {
-  title: "Компоненты/Кнопка",
+  title: "РљРѕРјРїРѕРЅРµРЅС‚С‹/РљРЅРѕРїРєР°",
   component: Button,
   parameters: {
     layout: "centered",
@@ -54,7 +54,7 @@ export default meta;
 type Story = StoryObj<typeof Button>;
 
 export const AllVariants: Story = {
-  name: "Все варианты",
+  name: "Р’СЃРµ РІР°СЂРёР°РЅС‚С‹",
   args: {
     children: "default",
     variant: "default",
@@ -102,3 +102,7 @@ export const AllVariants: Story = {
     );
   },
 };
+
+
+
+

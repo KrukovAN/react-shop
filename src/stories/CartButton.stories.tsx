@@ -1,10 +1,10 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+﻿import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 
-import { CartButton } from "@/components/ui/cart-button";
+import { CartButton } from "@/widgets/cart-button";
 
 const meta: Meta<typeof CartButton> = {
-  title: "Компоненты/Кнопка корзины",
+  title: "РљРѕРјРїРѕРЅРµРЅС‚С‹/РљРЅРѕРїРєР° РєРѕСЂР·РёРЅС‹",
   component: CartButton,
   parameters: {
     layout: "centered",
@@ -24,7 +24,7 @@ export default meta;
 type Story = StoryObj<typeof CartButton>;
 
 export const Demo: Story = {
-  name: "Интерактивно",
+  name: "РРЅС‚РµСЂР°РєС‚РёРІРЅРѕ",
   render: () => {
     const [count, setCount] = useState(0);
 
@@ -39,15 +39,19 @@ export const Demo: Story = {
 };
 
 export const Empty: Story = {
-  name: "Кнопка",
+  name: "РљРЅРѕРїРєР°",
   args: {
     count: 0,
   },
 };
 
 export const SingleItem: Story = {
-  name: "Количество",
+  name: "РљРѕР»РёС‡РµСЃС‚РІРѕ",
   args: {
     count: 2,
   },
 };
+
+
+
+
