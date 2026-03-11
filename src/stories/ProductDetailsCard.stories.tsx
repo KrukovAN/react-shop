@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+﻿import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { ProductDetailsCard } from "@/components/ui/product-details-card";
+import { ProductDetailsCard } from "@/widgets/product-details-card";
 
 const meta: Meta<typeof ProductDetailsCard> = {
-  title: "Товары/Карточка полного описания товара",
+  title: "РўРѕРІР°СЂС‹/РљР°СЂС‚РѕС‡РєР° РїРѕР»РЅРѕРіРѕ РѕРїРёСЃР°РЅРёСЏ С‚РѕРІР°СЂР°",
   component: ProductDetailsCard,
   parameters: {
     layout: "padded",
@@ -15,20 +15,20 @@ export default meta;
 type Story = StoryObj<typeof ProductDetailsCard>;
 
 export const Interactive: Story = {
-  name: "Интерактивно",
+  name: "РРЅС‚РµСЂР°РєС‚РёРІРЅРѕ",
   render: () => {
     const [count, setCount] = useState(0);
 
     return (
       <ProductDetailsCard
-        category="Освещение"
-        title="Дизайнерская настольная лампа"
+        category="РћСЃРІРµС‰РµРЅРёРµ"
+        title="Р”РёР·Р°Р№РЅРµСЂСЃРєР°СЏ РЅР°СЃС‚РѕР»СЊРЅР°СЏ Р»Р°РјРїР°"
         description={
-          "Компактная лампа для рабочего стола с регулировкой яркости, теплым и холодным светом и устойчивым металлическим основанием.\n\nПодходит для домашнего офиса, чтения и вечерней подсветки."
+          "РљРѕРјРїР°РєС‚РЅР°СЏ Р»Р°РјРїР° РґР»СЏ СЂР°Р±РѕС‡РµРіРѕ СЃС‚РѕР»Р° СЃ СЂРµРіСѓР»РёСЂРѕРІРєРѕР№ СЏСЂРєРѕСЃС‚Рё, С‚РµРїР»С‹Рј Рё С…РѕР»РѕРґРЅС‹Рј СЃРІРµС‚РѕРј Рё СѓСЃС‚РѕР№С‡РёРІС‹Рј РјРµС‚Р°Р»Р»РёС‡РµСЃРєРёРј РѕСЃРЅРѕРІР°РЅРёРµРј.\n\nРџРѕРґС…РѕРґРёС‚ РґР»СЏ РґРѕРјР°С€РЅРµРіРѕ РѕС„РёСЃР°, С‡С‚РµРЅРёСЏ Рё РІРµС‡РµСЂРЅРµР№ РїРѕРґСЃРІРµС‚РєРё."
         }
-        price="5 990 ₽"
+        price="5 990 в‚Ѕ"
         imageSrc="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1200&q=80"
-        imageAlt="Дизайнерская настольная лампа"
+        imageAlt="Р”РёР·Р°Р№РЅРµСЂСЃРєР°СЏ РЅР°СЃС‚РѕР»СЊРЅР°СЏ Р»Р°РјРїР°"
         cartCount={count}
         onCartIncrement={() => setCount((current) => current + 1)}
         onCartDecrement={() => setCount((current) => Math.max(0, current - 1))}
@@ -38,16 +38,20 @@ export const Interactive: Story = {
 };
 
 export const Default: Story = {
-  name: "Карточка",
+  name: "РљР°СЂС‚РѕС‡РєР°",
   args: {
-    category: "Аудиотехника",
-    title: "Беспроводные наушники с активным шумоподавлением",
+    category: "РђСѓРґРёРѕС‚РµС…РЅРёРєР°",
+    title: "Р‘РµСЃРїСЂРѕРІРѕРґРЅС‹Рµ РЅР°СѓС€РЅРёРєРё СЃ Р°РєС‚РёРІРЅС‹Рј С€СѓРјРѕРїРѕРґР°РІР»РµРЅРёРµРј",
     description:
-      "Модель для ежедневного использования дома, в дороге и в офисе.\n\nМягкие амбушюры, стабильное Bluetooth-соединение, автономность до 30 часов и чистый сбалансированный звук делают эту модель удобной для длительного прослушивания музыки и звонков.",
-    price: "12 990 ₽",
+      "РњРѕРґРµР»СЊ РґР»СЏ РµР¶РµРґРЅРµРІРЅРѕРіРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РґРѕРјР°, РІ РґРѕСЂРѕРіРµ Рё РІ РѕС„РёСЃРµ.\n\nРњСЏРіРєРёРµ Р°РјР±СѓС€СЋСЂС‹, СЃС‚Р°Р±РёР»СЊРЅРѕРµ Bluetooth-СЃРѕРµРґРёРЅРµРЅРёРµ, Р°РІС‚РѕРЅРѕРјРЅРѕСЃС‚СЊ РґРѕ 30 С‡Р°СЃРѕРІ Рё С‡РёСЃС‚С‹Р№ СЃР±Р°Р»Р°РЅСЃРёСЂРѕРІР°РЅРЅС‹Р№ Р·РІСѓРє РґРµР»Р°СЋС‚ СЌС‚Сѓ РјРѕРґРµР»СЊ СѓРґРѕР±РЅРѕР№ РґР»СЏ РґР»РёС‚РµР»СЊРЅРѕРіРѕ РїСЂРѕСЃР»СѓС€РёРІР°РЅРёСЏ РјСѓР·С‹РєРё Рё Р·РІРѕРЅРєРѕРІ.",
+    price: "12 990 в‚Ѕ",
     imageSrc:
       "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80",
-    imageAlt: "Беспроводные наушники",
+    imageAlt: "Р‘РµСЃРїСЂРѕРІРѕРґРЅС‹Рµ РЅР°СѓС€РЅРёРєРё",
     cartCount: 0,
   },
 };
+
+
+
+

@@ -1,4 +1,4 @@
-const LOCAL_PRODUCT_IMAGE_FALLBACK_SRC = "/product-images/placeholder.svg";
+﻿const LOCAL_PRODUCT_IMAGE_FALLBACK_SRC = "/product-images/placeholder.svg";
 
 const applyLocalImageFallback = (image: HTMLImageElement): void => {
   if (image.dataset.fallbackApplied === "true") {
@@ -10,3 +10,7 @@ const applyLocalImageFallback = (image: HTMLImageElement): void => {
 };
 
 export { LOCAL_PRODUCT_IMAGE_FALLBACK_SRC, applyLocalImageFallback };
+
+
+
+

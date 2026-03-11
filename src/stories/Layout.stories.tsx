@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Layout } from "@/components/ui/layout";
+import { Layout } from "@/layuots/layout";
 
 const meta: Meta<typeof Layout> = {
   title: "Навигация/Layout",
@@ -92,3 +92,7 @@ export const Default: Story = {
     </ThemeProvider>
   ),
 };
+
+
+
+

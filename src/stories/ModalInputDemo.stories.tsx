@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/layuots/input";
 import { Modal } from "@/components/ui/modal";
 
 function ModalInputDemoStory() {
@@ -54,3 +54,7 @@ export const Default: Story = {
   name: "Демо",
   render: () => <ModalInputDemoStory />,
 };
+
+
+
+

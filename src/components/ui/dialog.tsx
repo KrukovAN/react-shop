@@ -1,4 +1,4 @@
-import * as React from "react";
+﻿import * as React from "react";
 import { XIcon } from "lucide-react";
 import { Dialog as DialogPrimitive } from "radix-ui";
 import { cn } from "@/lib/utils";
@@ -75,7 +75,7 @@ function DialogContent({
             className="absolute top-2 right-2 inline-flex size-9 cursor-pointer items-center justify-center rounded-full border border-border/70 bg-background/85 text-foreground shadow-sm backdrop-blur-md transition-colors hover:bg-background focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none disabled:pointer-events-none supports-[backdrop-filter]:bg-background/70 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
           >
             <XIcon />
-            <span className="sr-only">Закрыть</span>
+            <span className="sr-only">Р—Р°РєСЂС‹С‚СЊ</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Content>
@@ -113,7 +113,7 @@ function DialogFooter({
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close asChild>
-          <Button variant="outline">Закрыть</Button>
+          <Button variant="outline">Р—Р°РєСЂС‹С‚СЊ</Button>
         </DialogPrimitive.Close>
       )}
     </div>
@@ -158,3 +158,7 @@ export {
   DialogTitle,
   DialogTrigger,
 };
+
+
+
+
