@@ -27,7 +27,7 @@ export const Interactive: Story = {
           "Компактная лампа для рабочего стола с регулировкой яркости, теплым и холодным светом и устойчивым металлическим основанием.\n\nПодходит для домашнего офиса, чтения и вечерней подсветки."
         }
         price="5 990 ₽"
-        imageSrc="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1200&q=80"
+        imageSrc="https://cloud.krukoff.pro/public.php/dav/files/3b2HSHk8H8JiSmP/lamp.avif"
         imageAlt="Дизайнерская настольная лампа"
         cartCount={count}
         onCartIncrement={() => setCount((current) => current + 1)}
@@ -46,7 +46,7 @@ export const Default: Story = {
       "Модель для ежедневного использования дома, в дороге и в офисе.\n\nМягкие амбушюры, стабильное Bluetooth-соединение, автономность до 30 часов и чистый сбалансированный звук делают эту модель удобной для длительного прослушивания музыки и звонков.",
     price: "12 990 ₽",
     imageSrc:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80",
+      "https://cloud.krukoff.pro/public.php/dav/files/3b2HSHk8H8JiSmP/headphones.avif",
     imageAlt: "Беспроводные наушники",
     cartCount: 0,
   },
