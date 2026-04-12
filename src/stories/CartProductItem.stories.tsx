@@ -44,7 +44,7 @@ const initialItems: CartStoryItem[] = [
     title: "Беспроводные наушники",
     price: "12 990 ₽",
     imageSrc:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
+      "https://cloud.krukoff.pro/public.php/dav/files/3b2HSHk8H8JiSmP/headphones.avif",
     imageAlt: "Беспроводные наушники",
     quantity: 2,
   },
@@ -53,7 +53,7 @@ const initialItems: CartStoryItem[] = [
     title: "Дизайнерская настольная лампа",
     price: "5 990 ₽",
     imageSrc:
-      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80",
+      "https://cloud.krukoff.pro/public.php/dav/files/3b2HSHk8H8JiSmP/lamp.avif",
     imageAlt: "Дизайнерская настольная лампа",
     quantity: 1,
   },
@@ -155,7 +155,7 @@ export const Default: Story = {
     title: "Беспроводные наушники",
     price: "12 990 ₽",
     imageSrc:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
+      "https://cloud.krukoff.pro/public.php/dav/files/3b2HSHk8H8JiSmP/headphones.avif",
     imageAlt: "Беспроводные наушники",
     quantity: 2,
   },
