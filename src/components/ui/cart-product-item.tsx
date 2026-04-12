@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Trash2 } from "lucide-react";
+import { useProductImage } from "@/hooks/use-product-image";
 import { cn } from "@/lib/utils";
 import { AspectRatio } from "./aspect-ratio";
 import { Button } from "./button";
@@ -29,6 +30,9 @@ function CartProductItem({
   className,
 }: CartProductItemProps) {
   const safeQuantity = Math.max(1, quantity);
+  const imageRef = React.useRef<HTMLImageElement | null>(null);
+  const { resolvedSrc, isLoading, handleImageLoad, handleImageError } =
+    useProductImage({ src: imageSrc, imageRef });
 
   return (
     <div
@@ -37,10 +41,22 @@ function CartProductItem({
         className,
       )}
     >
-      <AspectRatio ratio={1} className="overflow-hidden rounded-lg bg-muted">
+      <AspectRatio ratio={1} className="relative overflow-hidden rounded-lg bg-muted">
+        {isLoading ? (
+          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-background/70">
+            <div
+              className="h-6 w-6 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-primary"
+              aria-hidden="true"
+            />
+            <span className="sr-only">Загрузка изображения</span>
+          </div>
+        ) : null}
         <img
-          src={imageSrc}
+          ref={imageRef}
+          src={resolvedSrc}
           alt={imageAlt ?? title}
+          onLoad={handleImageLoad}
+          onError={handleImageError}
           className="h-full w-full object-cover"
         />
       </AspectRatio>
