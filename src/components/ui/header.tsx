@@ -1,7 +1,8 @@
-﻿import * as React from "react";
+import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
 import { Separator } from "./separator";
+import { ThemeToggle } from "./theme-toggle";
 
 type HeaderProps = React.ComponentProps<"header"> & {
   children?: React.ReactNode;
@@ -33,6 +34,7 @@ function Header({ children, className, ...props }: HeaderProps) {
               <span>Корзина</span>
             </nav>
           )}
+          <ThemeToggle />
         </div>
       </div>
     </header>
