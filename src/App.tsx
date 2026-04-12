@@ -4,60 +4,74 @@ import { Layout } from "@/components/ui/layout";
 import { Modal } from "@/components/ui/modal";
 import { ProductDetailsCard } from "@/components/ui/product-details-card";
 import { ProductList } from "@/components/ui/product-list";
-import { getBeautifulNumber } from "@/homeworks/ts1/1_base";
-import { createRandomProduct } from "@/homeworks/ts1/3_write";
-import type { Product } from "@/homeworks/ts1/3_write";
-
-const INITIAL_PRODUCTS_COUNT = 12;
-const PRODUCTS_STEP = 12;
-const MAX_PRODUCTS_COUNT = 120;
-
-const createProductBatch = (count: number): Product[] =>
-  Array.from({ length: count }, (_, index) =>
-    createRandomProduct(new Date(Date.now() + index).toISOString()),
-  );
+import { getBeautifulNumber } from "@/lib/number-format";
+import type { Product } from "@/types/shop";
+import { PRODUCTS_BATCH_SIZE, loadRandomProductsBatch } from "@/lib/products-api";
 
 const formatPrice = (price: number): string =>
   `${getBeautifulNumber(price.toFixed(2))} ₽`;
 
 function App() {
-  const [products, setProducts] = React.useState<Product[]>(() =>
-    createProductBatch(INITIAL_PRODUCTS_COUNT),
-  );
-  const [cartCounts, setCartCounts] = React.useState<Record<string, number>>(
-    {},
-  );
-  const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(
-    null,
-  );
-  const [isPending, startTransition] = React.useTransition();
+  const [products, setProducts] = React.useState<Product[]>([]);
+  const [isLoadingMore, setIsLoadingMore] = React.useState(false);
+  const [loadError, setLoadError] = React.useState<string | null>(null);
+  const [cartCounts, setCartCounts] = React.useState<Record<string, number>>({});
+  const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
 
-  const hasMoreProducts = products.length < MAX_PRODUCTS_COUNT;
+  const pendingRequestRef = React.useRef<AbortController | null>(null);
+  const isLoadingMoreRef = React.useRef(false);
+
+  const handleLoadMore = React.useCallback(async () => {
+    if (isLoadingMoreRef.current) {
+      return;
+    }
+
+    const requestController = new AbortController();
+
+    isLoadingMoreRef.current = true;
+    setIsLoadingMore(true);
+    setLoadError(null);
+    pendingRequestRef.current = requestController;
+
+    try {
+      const nextProducts = await loadRandomProductsBatch(
+        requestController.signal,
+        PRODUCTS_BATCH_SIZE,
+      );
+
+      setProducts((currentProducts) => [...currentProducts, ...nextProducts]);
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        return;
+      }
+
+      setLoadError(
+        error instanceof Error
+          ? error.message
+          : "Не удалось загрузить товары.",
+      );
+    } finally {
+      if (pendingRequestRef.current === requestController) {
+        pendingRequestRef.current = null;
+      }
+
+      isLoadingMoreRef.current = false;
+      setIsLoadingMore(false);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    void handleLoadMore();
+
+    return () => {
+      pendingRequestRef.current?.abort();
+    };
+  }, [handleLoadMore]);
+
   const totalItemsInCart = Object.values(cartCounts).reduce(
     (total, count) => total + count,
     0,
   );
-
-  const handleLoadMore = () => {
-    if (!hasMoreProducts || isPending) {
-      return;
-    }
-
-    startTransition(() => {
-      setProducts((currentProducts) => {
-        const remainingProducts = MAX_PRODUCTS_COUNT - currentProducts.length;
-
-        if (remainingProducts <= 0) {
-          return currentProducts;
-        }
-
-        return [
-          ...currentProducts,
-          ...createProductBatch(Math.min(PRODUCTS_STEP, remainingProducts)),
-        ];
-      });
-    });
-  };
 
   const handleCartIncrement = (productId: string) => {
     setCartCounts((currentCounts) => ({
@@ -76,11 +90,7 @@ function App() {
   const headerStats = (
     <div className="flex flex-col items-center text-center text-xs font-medium leading-5 text-muted-foreground sm:text-sm">
       <span>Отрисовано: {products.length}</span>
-      <span>
-        {hasMoreProducts
-          ? `Осталось: ${MAX_PRODUCTS_COUNT - products.length}`
-          : "Все показано"}
-      </span>
+      <span>Лента: бесконечная</span>
       <span>В корзине: {totalItemsInCart}</span>
     </div>
   );
@@ -94,14 +104,29 @@ function App() {
               Каталог товаров
             </p>
             <h1 className="mt-3 text-3xl font-semibold tracking-tight">
-              Карточки генерируются на лету с помощью утилит из домашнего
-              задания по TypeScript
+              Бесконечная лента со случайными товарами
             </h1>
             <p className="mt-4 max-w-3xl text-sm leading-6 text-muted-foreground">
-              Список принимает массив данных, рендерит карточки и подгружает
-              следующую пачку товаров при прокрутке через IntersectionObserver
+              При прокрутке подгружается новая пачка карточек.
+              Изображения выбираются случайно из диапазона
+              product-001.jpg ... product-999.jpg.
             </p>
           </section>
+
+          {loadError ? (
+            <section className="rounded-2xl border border-destructive/20 bg-destructive/5 p-4">
+              <p className="text-sm text-destructive">{loadError}</p>
+              <button
+                type="button"
+                onClick={() => {
+                  void handleLoadMore();
+                }}
+                className="mt-3 inline-flex h-9 items-center rounded-md border border-input bg-background px-4 text-sm font-medium transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+              >
+                Повторить загрузку
+              </button>
+            </section>
+          ) : null}
 
           <ProductList
             products={products}
@@ -110,8 +135,8 @@ function App() {
             onCartDecrement={handleCartDecrement}
             onProductSelect={setSelectedProduct}
             onLoadMore={handleLoadMore}
-            hasMore={hasMoreProducts}
-            isLoadingMore={isPending}
+            hasMore
+            isLoadingMore={isLoadingMore}
             formatPrice={formatPrice}
           />
         </div>
@@ -120,7 +145,6 @@ function App() {
           visible={Boolean(selectedProduct)}
           onClose={() => setSelectedProduct(null)}
           className="max-h-[calc(100vh-2rem)] w-[min(96vw,72rem)] max-w-none gap-0 overflow-y-auto border-0 bg-transparent p-0 shadow-none sm:max-w-none data-[state=open]:slide-in-from-bottom-6 data-[state=open]:duration-300"
-          // className="max-h-[calc(100vh-2rem)] w-[min(96vw,38rem)] sm:w-[min(92vw,32rem)] md:w-[min(92vw,38rem)] lg:w-[min(94vw,24rem)] xl:w-[min(96vw,72rem)] max-w-none gap-0 overflow-y-auto border-0 bg-transparent p-0 shadow-none sm:max-w-none data-[state=open]:slide-in-from-bottom-6 data-[state=open]:duration-300"
           hideHeader
         >
           {selectedProduct ? (
@@ -129,7 +153,7 @@ function App() {
               title={selectedProduct.name}
               description={
                 selectedProduct.desc ??
-                "Товар создан через переиспользуемый генератор случайных данных."
+                "Карточка подгружена из бесконечной ленты."
               }
               price={
                 <div className="flex flex-wrap items-center gap-3">

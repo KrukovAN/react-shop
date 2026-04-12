@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { Product } from "@/homeworks/ts1/3_write";
+import type { Product } from "@/types/shop";
 import { cn } from "@/lib/utils";
 import { CompactProductCard } from "./compact-product-card";
 
@@ -74,7 +74,7 @@ function ProductList({
           <div key={product.id} className="flex h-full flex-col">
             <CompactProductCard
               title={product.name}
-              description={product.desc ?? "Новая позиция из генератора товаров."}
+              description={product.desc ?? "Новая позиция каталога."}
               price={formatPrice ? formatPrice(product.price) : product.price}
               imageSrc={product.photo}
               imageAlt={product.name}

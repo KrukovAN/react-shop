@@ -1,5 +1,5 @@
 import * as React from "react";
-import { applyLocalImageFallback } from "@/lib/image";
+import { applyLocalImageFallback, resolveProductImageSrc } from "@/lib/image";
 import { cn } from "@/lib/utils";
 import { Card, CardDescription, CardTitle } from "./card";
 import { CartButton } from "./cart-button";
@@ -29,16 +29,55 @@ function ProductDetailsCard({
   onCartDecrement,
   className,
 }: ProductDetailsCardProps) {
+  const resolvedImageSrc = resolveProductImageSrc(imageSrc);
+  const imageRef = React.useRef<HTMLImageElement | null>(null);
+  const [isImageLoading, setIsImageLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const image = imageRef.current;
+
+    if (!image) {
+      setIsImageLoading(true);
+      return;
+    }
+
+    if (image.complete && image.naturalWidth > 0) {
+      setIsImageLoading(false);
+      return;
+    }
+
+    setIsImageLoading(true);
+  }, [resolvedImageSrc]);
+
+  const handleImageLoad = () => {
+    setIsImageLoading(false);
+  };
+
+  const handleImageError = (image: HTMLImageElement) => {
+    applyLocalImageFallback(image);
+    setIsImageLoading(false);
+  };
+
   return (
-    <Card
-      className={cn("w-full max-w-none overflow-hidden p-0", className)}
-    >
+    <Card className={cn("w-full max-w-none overflow-hidden p-0", className)}>
       <div className="grid h-full grid-cols-1 lg:grid-cols-[minmax(22rem,52rem)_minmax(24rem,1fr)]">
-              <div className="aspect-[4/3] sm:aspect-[2/1] lg:aspect-[4/3] overflow-hidden border-b bg-muted lg:border-r lg:border-b-0">
+        <div className="relative aspect-[4/3] overflow-hidden border-b bg-muted sm:aspect-[2/1] lg:aspect-[4/3] lg:border-r lg:border-b-0">
+          {isImageLoading ? (
+            <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-background/70">
+              <div
+                className="h-10 w-10 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-primary"
+                aria-hidden="true"
+              />
+              <span className="sr-only">Загрузка изображения</span>
+            </div>
+          ) : null}
+
           <img
-            src={imageSrc}
+            ref={imageRef}
+            src={resolvedImageSrc}
             alt={imageAlt ?? title}
-            onError={(event) => applyLocalImageFallback(event.currentTarget)}
+            onLoad={handleImageLoad}
+            onError={(event) => handleImageError(event.currentTarget)}
             className="h-full w-full object-cover"
           />
         </div>
