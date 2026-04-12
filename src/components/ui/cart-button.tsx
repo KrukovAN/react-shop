@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
