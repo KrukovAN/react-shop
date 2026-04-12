@@ -1,15 +1,13 @@
 import * as React from "react";
+import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
 import type { Product } from "@/types/shop";
 import { cn } from "@/lib/utils";
 import { CompactProductCard } from "./compact-product-card";
 
 type ProductListProps = {
   products: Product[];
-  cartCounts?: Record<string, number>;
-  onCartIncrement?: (productId: string) => void;
-  onCartDecrement?: (productId: string) => void;
   onProductSelect?: (product: Product) => void;
-  onLoadMore?: () => void;
+  onLoadMore?: () => void | Promise<void>;
   hasMore?: boolean;
   isLoadingMore?: boolean;
   formatPrice?: (price: number) => React.ReactNode;
@@ -18,9 +16,6 @@ type ProductListProps = {
 
 function ProductList({
   products,
-  cartCounts = {},
-  onCartIncrement,
-  onCartDecrement,
   onProductSelect,
   onLoadMore,
   hasMore = false,
@@ -28,44 +23,17 @@ function ProductList({
   formatPrice,
   className,
 }: ProductListProps) {
-  const observerTargetRef = React.useRef<HTMLDivElement | null>(null);
-  const canAutoLoadRef = React.useRef(true);
-  const lastProductCountRef = React.useRef(products.length);
+  const observerTargetRef = useInfiniteScrollTrigger({
+    enabled: hasMore,
+    isLoading: isLoadingMore,
+    onLoadMore,
+    resetToken: products.length,
+  });
 
-  React.useEffect(() => {
-    if (products.length !== lastProductCountRef.current) {
-      canAutoLoadRef.current = true;
-      lastProductCountRef.current = products.length;
-    }
-  }, [products.length]);
-
-  React.useEffect(() => {
-    if (!hasMore || !onLoadMore || typeof IntersectionObserver === "undefined") {
-      return undefined;
-    }
-
-    const node = observerTargetRef.current;
-
-    if (!node) {
-      return undefined;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting || isLoadingMore || !canAutoLoadRef.current) {
-          return;
-        }
-
-        canAutoLoadRef.current = false;
-        onLoadMore();
-      },
-      { rootMargin: "240px 0px" },
-    );
-
-    observer.observe(node);
-
-    return () => observer.disconnect();
-  }, [hasMore, isLoadingMore, onLoadMore, products.length]);
+  const renderPrice = React.useCallback(
+    (price: number) => (formatPrice ? formatPrice(price) : price),
+    [formatPrice],
+  );
 
   return (
     <section className={cn("space-y-6", className)}>
@@ -73,18 +41,16 @@ function ProductList({
         {products.map((product) => (
           <div key={product.id} className="flex h-full flex-col">
             <CompactProductCard
+              productId={product.id}
               title={product.name}
               description={product.desc ?? "Новая позиция каталога."}
-              price={formatPrice ? formatPrice(product.price) : product.price}
+              price={renderPrice(product.price)}
               imageSrc={product.photo}
               imageAlt={product.name}
               onImageClick={
                 onProductSelect ? () => onProductSelect(product) : undefined
               }
               imageActionLabel={`Открыть детали товара ${product.name}`}
-              cartCount={cartCounts[product.id] ?? 0}
-              onCartIncrement={() => onCartIncrement?.(product.id)}
-              onCartDecrement={() => onCartDecrement?.(product.id)}
               className="max-w-none"
             />
           </div>

@@ -1,10 +1,12 @@
 import * as React from "react";
-import { applyLocalImageFallback, resolveProductImageSrc } from "@/lib/image";
+import { useCartOptional } from "@/components/providers/cart-provider";
+import { useProductImage } from "@/hooks/use-product-image";
 import { cn } from "@/lib/utils";
 import { Card, CardDescription, CardTitle } from "./card";
 import { CartButton } from "./cart-button";
 
 type ProductDetailsCardProps = {
+  productId?: string;
   category: string;
   title: string;
   description: string;
@@ -18,6 +20,7 @@ type ProductDetailsCardProps = {
 };
 
 function ProductDetailsCard({
+  productId,
   category,
   title,
   description,
@@ -29,40 +32,37 @@ function ProductDetailsCard({
   onCartDecrement,
   className,
 }: ProductDetailsCardProps) {
-  const resolvedImageSrc = resolveProductImageSrc(imageSrc);
+  const cart = useCartOptional();
   const imageRef = React.useRef<HTMLImageElement | null>(null);
-  const [isImageLoading, setIsImageLoading] = React.useState(true);
+  const { resolvedSrc, isLoading, handleImageLoad, handleImageError } =
+    useProductImage({ src: imageSrc, imageRef });
 
-  React.useEffect(() => {
-    const image = imageRef.current;
+  const resolvedCartCount =
+    productId && cart ? cart.getCount(productId) : Math.max(0, cartCount);
 
-    if (!image) {
-      setIsImageLoading(true);
+  const handleIncrement = React.useCallback(() => {
+    if (productId && cart) {
+      cart.increment(productId);
       return;
     }
 
-    if (image.complete && image.naturalWidth > 0) {
-      setIsImageLoading(false);
+    onCartIncrement?.();
+  }, [cart, onCartIncrement, productId]);
+
+  const handleDecrement = React.useCallback(() => {
+    if (productId && cart) {
+      cart.decrement(productId);
       return;
     }
 
-    setIsImageLoading(true);
-  }, [resolvedImageSrc]);
-
-  const handleImageLoad = () => {
-    setIsImageLoading(false);
-  };
-
-  const handleImageError = (image: HTMLImageElement) => {
-    applyLocalImageFallback(image);
-    setIsImageLoading(false);
-  };
+    onCartDecrement?.();
+  }, [cart, onCartDecrement, productId]);
 
   return (
     <Card className={cn("w-full max-w-none overflow-hidden p-0", className)}>
       <div className="grid h-full grid-cols-1 lg:grid-cols-[minmax(22rem,52rem)_minmax(24rem,1fr)]">
         <div className="relative aspect-[4/3] overflow-hidden border-b bg-muted sm:aspect-[2/1] lg:aspect-[4/3] lg:border-r lg:border-b-0">
-          {isImageLoading ? (
+          {isLoading ? (
             <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-background/70">
               <div
                 className="h-10 w-10 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-primary"
@@ -74,10 +74,10 @@ function ProductDetailsCard({
 
           <img
             ref={imageRef}
-            src={resolvedImageSrc}
+            src={resolvedSrc}
             alt={imageAlt ?? title}
             onLoad={handleImageLoad}
-            onError={(event) => handleImageError(event.currentTarget)}
+            onError={handleImageError}
             className="h-full w-full object-cover"
           />
         </div>
@@ -98,9 +98,9 @@ function ProductDetailsCard({
           </div>
           <div className="mt-auto pt-6">
             <CartButton
-              count={cartCount}
-              onIncrement={onCartIncrement}
-              onDecrement={onCartDecrement}
+              count={resolvedCartCount}
+              onIncrement={handleIncrement}
+              onDecrement={handleDecrement}
               className="w-full min-w-0"
             />
           </div>

@@ -1,5 +1,6 @@
 import * as React from "react";
-import { applyLocalImageFallback, resolveProductImageSrc } from "@/lib/image";
+import { useCartOptional } from "@/components/providers/cart-provider";
+import { useProductImage } from "@/hooks/use-product-image";
 import { cn } from "@/lib/utils";
 import { AspectRatio } from "./aspect-ratio";
 import { CartButton } from "./cart-button";
@@ -12,6 +13,7 @@ import {
 } from "./card";
 
 type CompactProductCardProps = {
+  productId?: string;
   title: string;
   description: string;
   price: React.ReactNode;
@@ -26,6 +28,7 @@ type CompactProductCardProps = {
 };
 
 function CompactProductCard({
+  productId,
   title,
   description,
   price,
@@ -38,44 +41,31 @@ function CompactProductCard({
   onCartDecrement,
   className,
 }: CompactProductCardProps) {
-  const resolvedImageSrc = resolveProductImageSrc(imageSrc);
+  const cart = useCartOptional();
   const imageRef = React.useRef<HTMLImageElement | null>(null);
-  const [isImageLoading, setIsImageLoading] = React.useState(true);
+  const { resolvedSrc, isLoading, handleImageLoad, handleImageError } =
+    useProductImage({ src: imageSrc, imageRef });
 
-  React.useEffect(() => {
-    const image = imageRef.current;
+  const resolvedCartCount =
+    productId && cart ? cart.getCount(productId) : Math.max(0, cartCount);
 
-    if (!image) {
-      setIsImageLoading(true);
+  const handleIncrement = React.useCallback(() => {
+    if (productId && cart) {
+      cart.increment(productId);
       return;
     }
 
-    if (image.complete && image.naturalWidth > 0) {
-      setIsImageLoading(false);
+    onCartIncrement?.();
+  }, [cart, onCartIncrement, productId]);
+
+  const handleDecrement = React.useCallback(() => {
+    if (productId && cart) {
+      cart.decrement(productId);
       return;
     }
 
-    setIsImageLoading(true);
-  }, [resolvedImageSrc]);
-
-  const handleImageLoad = () => {
-    setIsImageLoading(false);
-  };
-
-  const handleImageError = (image: HTMLImageElement) => {
-    applyLocalImageFallback(image);
-    setIsImageLoading(false);
-  };
-
-  const loadingOverlay = isImageLoading ? (
-    <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-background/70">
-      <div
-        className="h-8 w-8 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-primary"
-        aria-hidden="true"
-      />
-      <span className="sr-only">Загрузка изображения</span>
-    </div>
-  ) : null;
+    onCartDecrement?.();
+  }, [cart, onCartDecrement, productId]);
 
   return (
     <Card
@@ -85,7 +75,15 @@ function CompactProductCard({
       )}
     >
       <AspectRatio ratio={1} className="relative overflow-hidden border-b bg-muted">
-        {loadingOverlay}
+        {isLoading ? (
+          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-background/70">
+            <div
+              className="h-8 w-8 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-primary"
+              aria-hidden="true"
+            />
+            <span className="sr-only">Загрузка изображения</span>
+          </div>
+        ) : null}
         {onImageClick ? (
           <button
             type="button"
@@ -95,20 +93,20 @@ function CompactProductCard({
           >
             <img
               ref={imageRef}
-              src={resolvedImageSrc}
+              src={resolvedSrc}
               alt={imageAlt ?? title}
               onLoad={handleImageLoad}
-              onError={(event) => handleImageError(event.currentTarget)}
+              onError={handleImageError}
               className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
             />
           </button>
         ) : (
           <img
             ref={imageRef}
-            src={resolvedImageSrc}
+            src={resolvedSrc}
             alt={imageAlt ?? title}
             onLoad={handleImageLoad}
-            onError={(event) => handleImageError(event.currentTarget)}
+            onError={handleImageError}
             className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
           />
         )}
@@ -122,9 +120,9 @@ function CompactProductCard({
       </CardHeader>
       <CardFooter className="mt-auto flex-col items-stretch gap-3 px-4 py-4 pt-0">
         <CartButton
-          count={cartCount}
-          onIncrement={onCartIncrement}
-          onDecrement={onCartDecrement}
+          count={resolvedCartCount}
+          onIncrement={handleIncrement}
+          onDecrement={handleDecrement}
           className="w-full min-w-0"
         />
       </CardFooter>
