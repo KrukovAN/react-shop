@@ -27,7 +27,7 @@ export const TwoProductsInteractive: Story = {
           title="Беспроводные наушники"
           description="Компактные полноразмерные наушники с активным шумоподавлением, мягкими амбушюрами и автономностью до 30 часов."
           price="12 990 ₽"
-          imageSrc="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80"
+          imageSrc="https://cloud.krukoff.pro/public.php/dav/files/3b2HSHk8H8JiSmP/headphones.avif"
           imageAlt="Беспроводные наушники"
           cartCount={headphonesCount}
           onCartIncrement={() => setHeadphonesCount((current) => current + 1)}
@@ -39,7 +39,7 @@ export const TwoProductsInteractive: Story = {
           title="Минималистичная настольная лампа"
           description="Тонкая алюминиевая настольная лампа с регулировкой яркости, теплыми и холодными режимами света, сенсорным управлением и устойчивым основанием для компактного рабочего места."
           price="5 990 ₽"
-          imageSrc="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80"
+          imageSrc="https://cloud.krukoff.pro/public.php/dav/files/3b2HSHk8H8JiSmP/lamp.avif"
           imageAlt="Минималистичная настольная лампа"
           cartCount={lampCount}
           onCartIncrement={() => setLampCount((current) => current + 1)}
@@ -60,7 +60,7 @@ export const Default: Story = {
       "Компактные полноразмерные наушники с активным шумоподавлением, мягкими амбушюрами и автономностью до 30 часов.",
     price: "12 990 ₽",
     imageSrc:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
+      "https://cloud.krukoff.pro/public.php/dav/files/3b2HSHk8H8JiSmP/headphones.avif",
     imageAlt: "Беспроводные наушники",
     cartCount: 0,
   },
@@ -74,7 +74,7 @@ export const LongDescription: Story = {
       "Тонкая алюминиевая настольная лампа с регулировкой яркости, теплыми и холодными режимами света, сенсорным управлением и устойчивым основанием для компактного рабочего места.",
     price: "5 990 ₽",
     imageSrc:
-      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80",
+      "https://cloud.krukoff.pro/public.php/dav/files/3b2HSHk8H8JiSmP/lamp.avif",
     imageAlt: "Минималистичная настольная лампа",
     cartCount: 2,
   },
