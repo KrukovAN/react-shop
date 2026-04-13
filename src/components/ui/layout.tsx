@@ -7,6 +7,8 @@ type LayoutProps = React.ComponentProps<"div"> & {
   headerContent?: React.ReactNode;
   contentClassName?: string;
   headerClassName?: string;
+  onProfileClick?: () => void;
+  onLoginClick?: () => void;
 };
 
 function Layout({
@@ -15,6 +17,8 @@ function Layout({
   headerContent,
   contentClassName,
   headerClassName,
+  onProfileClick,
+  onLoginClick,
   ...props
 }: LayoutProps) {
   return (
@@ -26,7 +30,13 @@ function Layout({
       )}
       {...props}
     >
-      <Header className={headerClassName}>{headerContent}</Header>
+      <Header
+        className={headerClassName}
+        onProfileClick={onProfileClick}
+        onLoginClick={onLoginClick}
+      >
+        {headerContent}
+      </Header>
 
       <main
         data-slot="layout-content"

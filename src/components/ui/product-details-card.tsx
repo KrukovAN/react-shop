@@ -3,6 +3,7 @@ import { useCartOptional } from "@/components/providers/cart-provider";
 import { useProductImage } from "@/hooks/use-product-image";
 import { cn } from "@/lib/utils";
 import { Card, CardDescription, CardTitle } from "./card";
+import { Button } from "./button";
 import { CartButton } from "./cart-button";
 
 type ProductDetailsCardProps = {
@@ -16,6 +17,9 @@ type ProductDetailsCardProps = {
   cartCount?: number;
   onCartIncrement?: () => void;
   onCartDecrement?: () => void;
+  showEditButton?: boolean;
+  onEdit?: () => void;
+  editLabel?: string;
   className?: string;
 };
 
@@ -30,6 +34,9 @@ function ProductDetailsCard({
   cartCount = 0,
   onCartIncrement,
   onCartDecrement,
+  showEditButton = true,
+  onEdit,
+  editLabel = "Изменить",
   className,
 }: ProductDetailsCardProps) {
   const cart = useCartOptional();
@@ -96,13 +103,24 @@ function ProductDetailsCard({
               </CardDescription>
             </div>
           </div>
-          <div className="mt-auto pt-6">
+          <div className="mt-auto flex flex-col gap-3 pt-6">
             <CartButton
               count={resolvedCartCount}
               onIncrement={handleIncrement}
               onDecrement={handleDecrement}
               className="w-full min-w-0"
             />
+            {showEditButton ? (
+              <Button
+                type="button"
+                variant="secondary"
+                className="w-full"
+                onClick={onEdit}
+                disabled={!onEdit}
+              >
+                {editLabel}
+              </Button>
+            ) : null}
           </div>
         </div>
       </div>

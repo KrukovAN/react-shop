@@ -1,14 +1,38 @@
 import * as React from "react";
+import { User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
+import { Button } from "./button";
 import { Separator } from "./separator";
 import { ThemeToggle } from "./theme-toggle";
 
 type HeaderProps = React.ComponentProps<"header"> & {
   children?: React.ReactNode;
+  onProfileClick?: () => void;
+  onLoginClick?: () => void;
 };
+const ZITADEL_AUTH_URL = "https://auth.uonn.ru";
 
-function Header({ children, className, ...props }: HeaderProps) {
+function Header({
+  children,
+  className,
+  onProfileClick,
+  onLoginClick,
+  ...props
+}: HeaderProps) {
+  const navItemClassName =
+    "cursor-pointer transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring";
+  const handleLoginClick = () => {
+    if (onLoginClick) {
+      onLoginClick();
+      return;
+    }
+
+    if (typeof window !== "undefined") {
+      window.location.assign(ZITADEL_AUTH_URL);
+    }
+  };
+
   return (
     <header
       data-slot="header"
@@ -28,16 +52,30 @@ function Header({ children, className, ...props }: HeaderProps) {
               aria-label="Основная навигация"
               className="hidden items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground md:flex"
             >
-              <span>Каталог</span>
+              <button type="button" className={navItemClassName}>
+                Каталог
+              </button>
               <Separator orientation="vertical" className="h-4" />
-              <span>Подборки</span>
+              <button
+                type="button"
+                className={navItemClassName}
+                onClick={onProfileClick}
+              >
+                Профиль
+              </button>
               <Separator orientation="vertical" className="h-4" />
-              <span>Корзина</span>
+              <button type="button" className={navItemClassName}>
+                Корзина
+              </button>
             </nav>
           )}
         </div>
 
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
+          <Button type="button" size="sm" onClick={handleLoginClick}>
+            <User className="size-4" />
+            <span>Войти</span>
+          </Button>
           <ThemeToggle />
         </div>
       </div>
