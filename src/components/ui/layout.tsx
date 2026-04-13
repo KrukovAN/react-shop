@@ -5,6 +5,7 @@ import { Header } from "./header";
 type LayoutProps = React.ComponentProps<"div"> & {
   children: React.ReactNode;
   headerContent?: React.ReactNode;
+  headerActions?: React.ReactNode;
   contentClassName?: string;
   headerClassName?: string;
   onProfileClick?: () => void;
@@ -15,6 +16,7 @@ function Layout({
   children,
   className,
   headerContent,
+  headerActions,
   contentClassName,
   headerClassName,
   onProfileClick,
@@ -34,6 +36,7 @@ function Layout({
         className={headerClassName}
         onProfileClick={onProfileClick}
         onLoginClick={onLoginClick}
+        actions={headerActions}
       >
         {headerContent}
       </Header>
