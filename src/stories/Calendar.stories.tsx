@@ -63,9 +63,9 @@ function CalendarDemo() {
   );
 }
 
-const meta: Meta<typeof Calendar> = {
+const meta: Meta<typeof CalendarDemo> = {
   title: "Компоненты/Календарь",
-  component: Calendar,
+  component: CalendarDemo,
   parameters: {
     layout: "padded",
   },
