@@ -3,6 +3,7 @@ import { useCartOptional } from "@/components/providers/cart-provider";
 import { useProductImage } from "@/hooks/use-product-image";
 import { cn } from "@/lib/utils";
 import { AspectRatio } from "./aspect-ratio";
+import { Button } from "./button";
 import { CartButton } from "./cart-button";
 import {
   Card,
@@ -24,6 +25,9 @@ type CompactProductCardProps = {
   cartCount?: number;
   onCartIncrement?: () => void;
   onCartDecrement?: () => void;
+  showEditButton?: boolean;
+  onEdit?: () => void;
+  editLabel?: string;
   className?: string;
 };
 
@@ -39,6 +43,9 @@ function CompactProductCard({
   cartCount = 0,
   onCartIncrement,
   onCartDecrement,
+  showEditButton = true,
+  onEdit,
+  editLabel = "Изменить",
   className,
 }: CompactProductCardProps) {
   const cart = useCartOptional();
@@ -125,6 +132,17 @@ function CompactProductCard({
           onDecrement={handleDecrement}
           className="w-full min-w-0"
         />
+        {showEditButton ? (
+          <Button
+            type="button"
+            variant="secondary"
+            className="w-full"
+            onClick={onEdit}
+            disabled={!onEdit}
+          >
+            {editLabel}
+          </Button>
+        ) : null}
       </CardFooter>
     </Card>
   );

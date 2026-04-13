@@ -10,6 +10,7 @@ type ProductListProps = {
   onLoadMore?: () => void | Promise<void>;
   hasMore?: boolean;
   isLoadingMore?: boolean;
+  onProductEdit?: (product: Product) => void;
   formatPrice?: (price: number) => React.ReactNode;
   className?: string;
 };
@@ -20,6 +21,7 @@ function ProductList({
   onLoadMore,
   hasMore = false,
   isLoadingMore = false,
+  onProductEdit,
   formatPrice,
   className,
 }: ProductListProps) {
@@ -51,6 +53,7 @@ function ProductList({
                 onProductSelect ? () => onProductSelect(product) : undefined
               }
               imageActionLabel={`Открыть детали товара ${product.name}`}
+              onEdit={onProductEdit ? () => onProductEdit(product) : undefined}
               className="max-w-none"
             />
           </div>
