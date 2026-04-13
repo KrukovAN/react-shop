@@ -8,7 +8,11 @@ const validateDiscount = (discount: number): void => {
 };
 
 export class AccountService {
-  constructor(private readonly repository: AccountDiscountRepository) {}
+  private readonly repository: AccountDiscountRepository;
+
+  constructor(repository: AccountDiscountRepository) {
+    this.repository = repository;
+  }
 
   setUserDiscount(userType: UserType, discount: number): void {
     validateDiscount(discount);

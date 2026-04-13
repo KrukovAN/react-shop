@@ -1,11 +1,34 @@
 ﻿import * as React from "react";
+import { formatPrice } from "@/app/formatters";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
-import { ProductFormModal } from "@/components/ui/product-form-modal";
 import { ProductDetailsCard } from "@/components/ui/product-details-card";
+import {
+  ProductFormModal,
+  type ProductFormSubmitPayload,
+} from "@/components/ui/product-form-modal";
 import { ProductList } from "@/components/ui/product-list";
-import { formatPrice } from "@/app/formatters";
+import { PRODUCT_IMAGE_REMOTE_BASE_URL } from "@/lib/image";
+import { useAppDispatch } from "@/store/hooks";
+import { addProduct, updateProduct } from "@/store/slices/products-slice";
 import type { Product } from "@/types/shop";
+
+const createProductId = (): string =>
+  typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? `prd_${crypto.randomUUID()}`
+    : `prd_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
+
+const toCategoryId = (categoryName: string): string => {
+  const normalized = categoryName.trim().toLowerCase().replace(/\s+/g, "_");
+  return `cat_${normalized || "custom"}`;
+};
+
+const createRandomProductImage = (): string => {
+  const randomIndex = Math.floor(Math.random() * 999) + 1;
+  return `${PRODUCT_IMAGE_REMOTE_BASE_URL}/product-${randomIndex
+    .toString()
+    .padStart(3, "0")}.jpg`;
+};
 
 type ProductsPageProps = {
   products: Product[];
@@ -22,6 +45,8 @@ function ProductsPage({
   onLoadMore,
   isAdmin,
 }: ProductsPageProps) {
+  const dispatch = useAppDispatch();
+
   const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(
     null,
   );
@@ -64,6 +89,45 @@ function ProductsPage({
     setIsProductFormOpen(false);
     setEditingProduct(null);
   }, []);
+
+  const handleSubmit = React.useCallback(
+    (payload: ProductFormSubmitPayload) => {
+      const category = {
+        id: toCategoryId(payload.categoryName),
+        name: payload.categoryName,
+      };
+
+      if (productFormMode === "edit" && editingProduct) {
+        dispatch(
+          updateProduct({
+            ...editingProduct,
+            name: payload.name,
+            desc: payload.description,
+            category,
+            price: payload.price,
+            oldPrice: payload.oldPrice,
+            createdAt: payload.createdAt,
+          }),
+        );
+
+        return;
+      }
+
+      dispatch(
+        addProduct({
+          id: createProductId(),
+          name: payload.name,
+          photo: createRandomProductImage(),
+          desc: payload.description,
+          category,
+          price: payload.price,
+          oldPrice: payload.oldPrice,
+          createdAt: payload.createdAt,
+        }),
+      );
+    },
+    [dispatch, editingProduct, productFormMode],
+  );
 
   return (
     <>
@@ -159,12 +223,7 @@ function ProductsPage({
               : undefined
           }
           onClose={closeProductForm}
-          onSubmit={(payload) => {
-            console.log("[ProductsPage] product submit", payload);
-          }}
-          onValidation={(result) => {
-            console.log("[ProductsPage] product validation", result);
-          }}
+          onSubmit={handleSubmit}
         />
       ) : null}
     </>
