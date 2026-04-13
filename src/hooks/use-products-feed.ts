@@ -1,5 +1,6 @@
-import * as React from "react";
-import { PRODUCTS_BATCH_SIZE, loadRandomProductsBatch } from "@/lib/products-api";
+﻿import * as React from "react";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { loadMoreProducts } from "@/store/slices/products-slice";
 import type { Product } from "@/types/shop";
 
 type UseProductsFeedResult = {
@@ -10,57 +11,26 @@ type UseProductsFeedResult = {
 };
 
 function useProductsFeed(): UseProductsFeedResult {
-  const [products, setProducts] = React.useState<Product[]>([]);
-  const [isLoadingMore, setIsLoadingMore] = React.useState(false);
-  const [loadError, setLoadError] = React.useState<string | null>(null);
-
-  const pendingRequestRef = React.useRef<AbortController | null>(null);
-  const isLoadingMoreRef = React.useRef(false);
+  const dispatch = useAppDispatch();
+  const products = useAppSelector((state) => state.products.items);
+  const isLoadingMore = useAppSelector((state) => state.products.isLoadingMore);
+  const loadError = useAppSelector((state) => state.products.loadError);
 
   const loadMore = React.useCallback(async () => {
-    if (isLoadingMoreRef.current) {
+    try {
+      await dispatch(loadMoreProducts()).unwrap();
+    } catch {
+      // Error state is already captured in the slice.
+    }
+  }, [dispatch]);
+
+  React.useEffect(() => {
+    if (products.length > 0 || isLoadingMore) {
       return;
     }
 
-    const requestController = new AbortController();
-
-    isLoadingMoreRef.current = true;
-    setIsLoadingMore(true);
-    setLoadError(null);
-    pendingRequestRef.current = requestController;
-
-    try {
-      const nextProducts = await loadRandomProductsBatch(
-        requestController.signal,
-        PRODUCTS_BATCH_SIZE,
-      );
-
-      setProducts((currentProducts) => [...currentProducts, ...nextProducts]);
-    } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") {
-        return;
-      }
-
-      setLoadError(
-        error instanceof Error ? error.message : "Не удалось загрузить товары.",
-      );
-    } finally {
-      if (pendingRequestRef.current === requestController) {
-        pendingRequestRef.current = null;
-      }
-
-      isLoadingMoreRef.current = false;
-      setIsLoadingMore(false);
-    }
-  }, []);
-
-  React.useEffect(() => {
     void loadMore();
-
-    return () => {
-      pendingRequestRef.current?.abort();
-    };
-  }, [loadMore]);
+  }, [isLoadingMore, loadMore, products.length]);
 
   return {
     products,

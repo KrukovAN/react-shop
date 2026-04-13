@@ -14,6 +14,7 @@ function App() {
   const { products, isLoadingMore, loadError, loadMore } = useProductsFeed();
 
   const {
+    isSessionReady,
     isAuthenticated,
     isAdmin,
     authLabel,
@@ -37,6 +38,28 @@ function App() {
         })),
     [counts, products],
   );
+
+  if (!isSessionReady) {
+    return (
+      <Layout
+        headerContent={<AppHeaderNav isAdmin={false} />}
+        headerActions={
+          <AppHeaderActions
+            authLabel="Загрузка"
+            isAuthenticated={false}
+            totalItems={0}
+            authRoute={ROUTES.auth}
+            cartRoute={ROUTES.cart}
+            onLogout={logout}
+          />
+        }
+      >
+        <section className="py-10 text-sm text-muted-foreground">
+          Инициализация приложения...
+        </section>
+      </Layout>
+    );
+  }
 
   return (
     <Layout
