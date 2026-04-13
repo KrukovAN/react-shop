@@ -1,4 +1,4 @@
-import * as React from "react";
+﻿import * as React from "react";
 import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
 import type { Product } from "@/types/shop";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,7 @@ type ProductListProps = {
   onLoadMore?: () => void | Promise<void>;
   hasMore?: boolean;
   isLoadingMore?: boolean;
+  canEdit?: boolean;
   onProductEdit?: (product: Product) => void;
   formatPrice?: (price: number) => React.ReactNode;
   className?: string;
@@ -21,6 +22,7 @@ function ProductList({
   onLoadMore,
   hasMore = false,
   isLoadingMore = false,
+  canEdit = false,
   onProductEdit,
   formatPrice,
   className,
@@ -53,6 +55,7 @@ function ProductList({
                 onProductSelect ? () => onProductSelect(product) : undefined
               }
               imageActionLabel={`Открыть детали товара ${product.name}`}
+              showEditButton={canEdit}
               onEdit={onProductEdit ? () => onProductEdit(product) : undefined}
               className="max-w-none"
             />

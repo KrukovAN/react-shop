@@ -10,7 +10,9 @@ type HeaderProps = React.ComponentProps<"header"> & {
   children?: React.ReactNode;
   onProfileClick?: () => void;
   onLoginClick?: () => void;
+  actions?: React.ReactNode;
 };
+
 const ZITADEL_AUTH_URL = "https://auth.uonn.ru";
 
 function Header({
@@ -18,10 +20,12 @@ function Header({
   className,
   onProfileClick,
   onLoginClick,
+  actions,
   ...props
 }: HeaderProps) {
   const navItemClassName =
     "cursor-pointer transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring";
+
   const handleLoginClick = () => {
     if (onLoginClick) {
       onLoginClick();
@@ -72,10 +76,12 @@ function Header({
         </div>
 
         <div className="flex items-center gap-2">
-          <Button type="button" size="sm" onClick={handleLoginClick}>
-            <User className="size-4" />
-            <span>Войти</span>
-          </Button>
+          {actions ?? (
+            <Button type="button" size="sm" onClick={handleLoginClick}>
+              <User className="size-4" />
+              <span>Войти</span>
+            </Button>
+          )}
           <ThemeToggle />
         </div>
       </div>
